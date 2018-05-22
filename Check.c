@@ -9,6 +9,7 @@ struct person {
 };
 // Declare Function
 int count_line(FILE *open);
+int strindex (struct person *pointer, char const *string[]);
 void store_in_structure(struct person *pointer, char *string, FILE *open);
 void cmp(struct person *pointer, char const *string[], FILE *open);
 
@@ -47,17 +48,16 @@ int main(int argc, char const *argv[]) {
 // DEFINE Function
 // Compare argument function
 void cmp(struct person *pointer, char const *string[], FILE *open) {
-    int length = 0;
-    int j = 0;
-    length = strlen(string[1]);
-    //printf("%d\n",length );
-    char string_name [length + 1];
-    for (int i = strlen(pointer->name)-length; i <= strlen(pointer->name); i++) {
-        string_name[j] = pointer->name[i];
-        ++j;
-    }
-    printf("%s\n",string_name);
-    if (strcmp(string_name,string[1]) == 0 || strcmp(string[1],"*") == 0) {
+    //int length = 0;
+    //int j = 0;
+    //length = strlen(string[1]);
+    //char string_name [length + 1];
+    // for (int i = strlen(pointer->name)-length; i <= strlen(pointer->name); i++) {
+    //     string_name[j] = pointer->name[i];
+    //     ++j;
+    // }
+    //printf("%s\n",string_name);
+    if (strindex(pointer, string) == 1 || strcmp(string[1],"*") == 0) {
         if ((atoi(string[2]) <= pointer->age && pointer->age <= atoi(string[3]))
             ||(strcmp(string[2],"*") == 0 && pointer->age <= atoi(string[3]))
             ||(atoi(string[2]) <= pointer->age && strcmp(string[3],"*") == 0)) {
@@ -120,4 +120,37 @@ void store_in_structure(struct person *pointer, char *string, FILE *open) {
     pointer->age = atoi(number[0]);
     pointer->weight = atof(number[1]);
     pointer->income = atof(number[2]);
+}
+
+// Check name
+int strindex (struct person *pointer, char const *string[]){
+    int check = 0, boolean = 0;
+    char temp[strlen(string[1])+1];
+    strcpy(temp,string[1]);
+    for (int i = 0; temp[i] != '\0'; i++) {
+        if (temp[i] == 32){
+            check = 1;
+        }
+    }
+    if (check == 0) {
+        for (int i = 0; i <= strlen(pointer->name); i++) {
+            for (int j = i, k = 0; temp[k] != '\0'; j++, k++) {
+                temp[k] = pointer->name[j];
+            }
+            if (strcmp(temp,string[1]) == 0){
+                boolean = 1; // TRUE
+            }
+            for (int m = i; m <= strlen(pointer->name); m++) {
+                if (pointer->name[m] == 32) boolean = 0;
+            }
+        }
+    }else{
+        for (int i = strlen(pointer->name)-strlen(string[1]), j = 0; i <= strlen(pointer->name); i++) {
+            temp[j] = pointer->name[i];
+            ++j;
+        }
+        if (strcmp(temp,string[1]) == 0) boolean = 1;
+
+    }
+    return boolean;
 }
