@@ -125,21 +125,24 @@ void store_in_structure(struct person *pointer, char *string, FILE *open) {
 // Check name
 int strindex (struct person *pointer, char const *string[]){
     int check = 0, boolean = 0;
-    char temp[strlen(string[1])+1];
+    char temp[strlen(string[1])+1]; //Create string temp and then copy the argv[1] into it in order to check the space in name put in the command line
     strcpy(temp,string[1]);
     for (int i = 0; temp[i] != '\0'; i++) {
         if (temp[i] == 32){
-            check = 1;
+            check = 1; // When the console pass SPACE check will be 1
         }
     }
+    // Check 2 options : 1) there is spaces in name 2) no space
     if (check == 0) {
         for (int i = 0; i <= strlen(pointer->name); i++) {
             for (int j = i, k = 0; temp[k] != '\0'; j++, k++) {
                 temp[k] = pointer->name[j];
             }
+            // Check whether the name from the big data contains the first command line or not
             if (strcmp(temp,string[1]) == 0){
                 boolean = 1; // TRUE
             }
+            // Check after the mutual character whether the name still has name or not
             for (int m = i; m <= strlen(pointer->name); m++) {
                 if (pointer->name[m] == 32) boolean = 0;
             }
